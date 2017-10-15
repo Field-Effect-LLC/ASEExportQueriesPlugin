@@ -47,13 +47,18 @@ namespace ExportQueriesPlugin
                 {
                     foreach (string query in toExport)
                     {
-                        string sql = ((dynamic)_Context.Database)
-                            .GetQueryElement(query).GetQueryPatchedSQL();
+                        string sql = GetQueryPatchedSQL(query);
 
                         File.WriteAllText(Path.Combine(fileDialog.SelectedPath, query + ".sql"), sql);
                     }
                 }
             }
+        }
+
+        private string GetQueryPatchedSQL(string query)
+        {
+            return ((dynamic)_Context.Database)
+                    .GetQueryElement(query).GetQueryPatchedSQL();
         }
 
         private string GetQueryFullTextSQL(string query)
