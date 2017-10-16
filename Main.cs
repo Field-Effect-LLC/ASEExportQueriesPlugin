@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace ExportQueriesPlugin
 {
@@ -39,17 +40,17 @@ namespace ExportQueriesPlugin
                 .Select<TreeNodeAdv, string>(n => n.ToString())
                 .ToArray<string>();
 
-            using (FolderBrowserDialog fileDialog = new FolderBrowserDialog())
+            using (CommonOpenFileDialog fileDialog = new CommonOpenFileDialog())
             {
-                fileDialog.ShowNewFolderButton = true;
+                fileDialog.IsFolderPicker = true;
 
-                if(fileDialog.ShowDialog() == DialogResult.OK)
+                if(fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     foreach (string query in toExport)
                     {
                         string sql = GetQueryPatchedSQL(query);
 
-                        File.WriteAllText(Path.Combine(fileDialog.SelectedPath, query + ".sql"), sql);
+                        File.WriteAllText(Path.Combine(fileDialog.FileName, query + ".sql"), sql);
                     }
                 }
             }
